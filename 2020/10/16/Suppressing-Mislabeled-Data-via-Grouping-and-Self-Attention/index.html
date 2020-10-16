@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>Suppressing Mislabeled Data via Grouping and Self-Attention.md | Sditch</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.ico">
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/"><img src="/images/34339465.jpg" alt=""></a>
+    <div class="nickname"><a href="/">Sditch</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">归档</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+<script src="/js/activeNav.js"></script>
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+
+
+
+
+
+
+
+<!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+<div class="container post-details" id="post-details">
+  <div class="post-content">
+    <div class="post-title">Suppressing Mislabeled Data via Grouping and Self-Attention.md</div>
+    <div class="post-attach">
+      <span class="post-pubtime">2020-10-16</span>
+      <span class="post-tags">
+        
+          <i class="iconfont icon-tags"></i>
+          
+          <span class="span--tag">
+            <a href="/tags/cv/">
+              #cv
+            </a>
+          </span>
+          
+        
+      </span>
+    </div>
+    <div class="markdown-body">
+      <p>论文地址：<a target="_blank" rel="noopener" href="https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123610766.pdf">https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123610766.pdf</a></p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>近年来，深度神经网络(DNN)在图像识别任务中取得了巨大的成功，尤其是在大量标注正确的数据集(clean datasets)上。但是总是使用人工标注数据集是极其费时费力的，而且也存在标注错误的可能。目前有很多数据集是通过关键字下载网上的图片而得到的，但是这样的数据集存在很多标注错误(噪声标签)的图片。当从<strong>噪声标签</strong>（数据集中含有错误标签）中学习时，DNN的性能将大大降低。为了抑制标签错误的数据对图像识别任务的影响，本文提出了一个简单而有效的即插即用的训练模块—— **Attentive Feature Mixup(AFM)**，它可以使更多的注意力集中在clean samples上，对noisy samples施加较小的权重，进而抑制mislabeled数据的影响。</p>
+<h2 id="AFM模块的优势"><a href="#AFM模块的优势" class="headerlink" title="AFM模块的优势"></a>AFM模块的优势</h2><p> (i) 它不需要任何assumptions，也不需要额外的clean数据集</p>
+<p> (ii) 该模块可以使得noisy数据集的比例得到降低</p>
+<p> (iii) 它引入注意力机制降低mislabeled数据的权重，进而抑制mislabeled数据对模型的影响</p>
+<p> (iv) AFM模块含有mixup模块，能够减少过拟合</p>
+<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><p><strong>Attentive Feature Mixup(AFM) = Group-to-Attend (GA) + mixup</strong></p>
+<p>Group-to-Attend (GA)：由group操作和attend操作组成</p>
+<blockquote>
+<p>Group：将小批量的样本分组，得到一个个子样本</p>
+<p>Attend：对所有分组的样本施加attention操作，对clean样本分配较大权重，noisy样本分配较小权重</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1710.09412.pdf">mixup</a>：2017年由MIT和FAIR提出，它是指利用数据和标签的随机线性插值提高神经网络的健壮性。通过mixup可以生成新的样本和新的标签。具体可参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/980adca722a7">https://www.jianshu.com/p/980adca722a7</a></p>
+<p><img src="https://i.loli.net/2020/10/16/E1GtTQqUJo6Pxca.png" alt="image-20201016195242469.png"></p>
+<p>模型的具体算法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、将一个minibatch的样本经过CNN网络提取特征得到x1,...,xn</span><br><span class="line"><span class="number">2</span>、将n个特征随机并可重复地分成大量的组，每组含有K个特征，共m个组</span><br><span class="line"><span class="number">3</span>、将K个特征分别进入K个不同的全连接层(FC)(即Projection操作)，得到每组新的特征</span><br><span class="line"><span class="number">4</span>、将每组的特征进行Interaction操作——拼接、点乘或相加</span><br><span class="line"><span class="number">5</span>、将Interaction操作得到的特征经过Attention模块处理，得到每组的K个权重值</span><br><span class="line">    注：Attention部分参照的CVPR2019的Metacleaner模型，该论文比较了三种划分权重的方法，最终得出FC-FC-R-S结构效果最好</span><br><span class="line">       当然，两层FC是为了实现非线性，在Sigmoid之前加上ReLu是为了保证权重值α在[<span class="number">0.5</span>, <span class="number">1</span>]之间</span><br><span class="line"><span class="number">6</span>、MixUp：将所得的权重值(αi, αj)按比例施加到初始样本(xi, xj)上，得到新的样本x<span class="string">&#x27;，同时，对样本空间y(one-hot变量)施加权重得到新的标签y&#x27;</span></span><br><span class="line"><span class="number">7</span>、将mixup操作得到的新的样本输入到插值分类器fc1中，得到Lafm损失函数；</span><br><span class="line">   将初始噪声样本x1,...,xn经过常规分类器fc2，得到Lorg损失函数；</span><br><span class="line">    对Lafm和Lorg损失函数进行线性加权，得到整个模型的最终的损失函数Ltotal进行训练————即本文采用的多任务训练模型(原样本和新样本)</span><br></pre></td></tr></table></figure>
+
+<p>值得注意的是，AFM模块仅运用在训练模型中，对对数据集进行分类的时候，去掉AFM模块。</p>
+<p>上述算法体现了AFM模块的优势(iii)和优势(iv)，但是对于上文提出的  优势(ii)使得noisy数据集的比例得到降低  如何体现呢？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">以本文K=<span class="number">2</span>为例，作者认为：两个clean的样本 ---&gt;(生成得到) 新的样本时，其label为clean的；</span><br><span class="line">                     类内：一clean样本 + 一个noisy样本，经过Attention模块抑制noisy样本的权重，其label为clean</span><br><span class="line">                     类间：一clean样本 + 一个noisy样本，对神经网络训练没太大影响</span><br><span class="line">                     类内：一noisy样本 + 一个noisy样本，生成的新样本为noisy样本</span><br></pre></td></tr></table></figure>
+
+<p>但是对于一个Ntotal的样本，其噪声标签的样本数为Nnoisy，那么每个样本是噪声样本的概率是Nnoisy / Ntotal；</p>
+<p>然而对于生成的一个新样本，为噪声样本的前提是K(=2)个样本均为noisy样本，那么其概率经过排列组合之后，其概率明显减小了：</p>
+<img src="https://i.loli.net/2020/10/16/5pbyawjCHXQSJch.png" alt="image-20201016205605641" style="zoom:25%;" />
+
+<p>基于此，优势(ii)得到证明。</p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>作者在Food101N(标签准确度为80%)和Clothing1M(标签准确度为61.54%)进行训练，得到的结果增强了。(注：Clothing1M在只有噪声集下训练结果虽然不是最优，但是模型复杂度和计算复杂度比SMP(Final)低)</p>
+ <img src="https://i.loli.net/2020/10/16/JtQ63EvblVZIBum.png" alt="image-20201016210131845" style="zoom:50%;" />
+
+ <img src="https://i.loli.net/2020/10/16/xHkhCZLzEVNM1vU.png" alt="image-20201016210219526" />
+
+<h5 id="Ablation-Study"><a href="#Ablation-Study" class="headerlink" title="Ablation Study"></a>Ablation Study</h5><p><img src="https://i.loli.net/2020/10/16/vLH6MEwUtdGkWZR.png" alt="image-20201016210542888.png"></p>
+ <img src="https://i.loli.net/2020/10/16/59WPXVreRJDnskh.png" alt="image-20201016210723270" style="zoom:40%;" />
+    </div>
+    
+      <div class="prev-or-next">
+        <div class="post-foot-next">
+          
+            <a href="/2020/08/15/Non-local-Neural-Networks/" target="_self">
+              <i class="iconfont icon-chevronleft"></i>
+              <span>PREV</span>
+            </a>
+          
+        </div>
+        <div class="post-attach">
+          <span class="post-pubtime">2020-10-16</span>
+          <span class="post-tags">
+            
+              <i class="iconfont icon-tags"></i>
+              
+              <span class="span--tag">
+                <a href="/tags/cv/">
+                  #cv
+                </a>
+              </span>
+              
+            
+          </span>
+        </div>
+        <div class="post-foot-prev">
+          
+        </div>
+      </div>
+    
+  </div>
+  
+  <div class="post-catalog" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AFM%E6%A8%A1%E5%9D%97%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-text">AFM模块的优势</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B"><span class="toc-text">模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-text">结果</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Ablation-Study"><span class="toc-text">Ablation Study</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+  <script src="/js/catalog.js"></script>
+
+
+
+  
+    <div class="comments-container">
+      
+
+
+
+
+
+    </div>
+  
+</div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" href="https://github.com/Sditch/sditch.github.io">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a href="https://github.com/Sditch/sditch.github.io">Copyright © Switch 2020</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+<script src="/js/backtotop.js"></script>
+
+
+    </div>
+  </body>
+</html>

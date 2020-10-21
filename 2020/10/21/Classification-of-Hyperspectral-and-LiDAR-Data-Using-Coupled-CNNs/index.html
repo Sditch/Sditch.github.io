@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>Classification of Hyperspectral and LiDAR Data Using Coupled CNNs | Sditch</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.ico">
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/"><img src="/images/34339465.jpg" alt=""></a>
+    <div class="nickname"><a href="/">Sditch</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">归档</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+<script src="/js/activeNav.js"></script>
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+
+
+
+
+
+
+
+<!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+<div class="container post-details" id="post-details">
+  <div class="post-content">
+    <div class="post-title">Classification of Hyperspectral and LiDAR Data Using Coupled CNNs</div>
+    <div class="post-attach">
+      <span class="post-pubtime">2020-10-21</span>
+      <span class="post-tags">
+        
+          <i class="iconfont icon-tags"></i>
+          
+          <span class="span--tag">
+            <a href="/tags/cv/">
+              #cv
+            </a>
+          </span>
+          
+        
+      </span>
+    </div>
+    <div class="markdown-body">
+      <blockquote>
+<p>论文地址：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2002.01144.pdf">https://arxiv.org/pdf/2002.01144.pdf</a></p>
+</blockquote>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>精确的土地覆盖和土地利用的分类问题主要通过高光谱图像(HSI)来解决。但是当某一图像地不同区域具有相似的光谱信息时，高光谱对其不能很好地区分。随着遥感技术的发展，激光雷达(LiDAR)可以测量地球表面同一物体的不同方位而获得一个三维模型。与高光谱数据不同，LiDAR数据可以记录对象的海拔信息，从而为高光谱数据提供补充信息。例如，如果建筑物的屋顶和道路都由混凝土组成，则仅使用高光谱数据很难区分它们，因为它们的光谱信息相似。但是，由于LiDAR数据具有不同的高度，因此可以准确地对这两个类别进行分类。相反，LiDAR数据无法区分由不同材料（例如沥青和混凝土）组成且高度相同的两条不同的道路。因此，本文采取将高光谱图像与LiDAR数据融合的策略进行地物的分类。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><h3 id="1、所提模型的框架"><a href="#1、所提模型的框架" class="headerlink" title="1、所提模型的框架"></a>1、所提模型的框架</h3><p><img src="https://i.loli.net/2020/10/21/o2yWc6Oq9lvxhYP.png" alt="image-20201021004536926.png"></p>
+<blockquote>
+<p>1、对于HSI图像：将其进行PCA降维以减少冗余信息，接着将降维后的图片裁剪为一个个小patch</p>
+<p>​      对于LiDAR图像：直接提取图像小patch(patch的空间位置与HSI的patch一一对应并保持一样)</p>
+<p>2、将裁剪好的patch输入特征学习阶段(三层CNN)，并且最后两层CNN共享参数权重</p>
+<p>3、在融合模块(Fusion module)，我们构造了三个分类器。将两个输出的CNN层分别送进一个分类器，两个CNN层的融合特征也被送进一个分类器。</p>
+</blockquote>
+<h3 id="2、经过-Coupled-CNNs-进行特征学习"><a href="#2、经过-Coupled-CNNs-进行特征学习" class="headerlink" title="2、经过 Coupled CNNs 进行特征学习"></a>2、经过 Coupled CNNs 进行特征学习</h3> <img src="https://i.loli.net/2020/10/21/FqvIR2iHEcuJMy8.png" alt="image-20201021091511101" style="zoom:50%;" />
+
+<blockquote>
+<p>设：高光谱图像Xh ∈ R(m*n*b)，对应的LiDAR图像Xl ∈ R(m * n）—— m：Image高度；n：Image宽度；b：HSI的光谱通道数</p>
+<p>目标：融合来自Xh和Xl的信息，以改善分类性能。</p>
+<p>注：由于多径散射和子像素成分异质性的影响，Xh通常在捕获的光谱信息和相应的材料之间表现出非线性关系。当处理X1时，这种非线性特性将被放大。</p>
+<p>本文设计了一个coupled CNN框架，可以有效地从Xh和Xl学习：</p>
+<p>1、先用PCA提取Xh的前k个主成分，以减少冗余频谱信息。</p>
+<p>2、对于每个像素，从Xh中选择以该像素为中心的patch：xh ∈ R(p * p * k)，从Xl中选择对应的patch：xl ∈ R(p * p)。本文p=11</p>
+<p>3、将xh和xl分别放入三个卷积层学习特征。</p>
+<p>​    （1）Conv1：将xh和xl分别放入不同的卷积层（蓝色框和橙色框）学习特征。其中BN层来规范化和加速训练过程，ReLU层学习非线性特征，最大池化层用来减少数据差异和计算复杂性。</p>
+<p>​    （2）Conv2：采用coupled策略，将HS网络和LiDAR网络共享参数。它可以将参数数量显着减少两倍，这对于少量的训练样本非常有用；它还能使这两个网络相互学习。</p>
+<p>​    （3）Conv3：与conv2一样，采用coupled策略。</p>
+</blockquote>
+<h3 id="3、高光谱和LiDAR数据融合"><a href="#3、高光谱和LiDAR数据融合" class="headerlink" title="3、高光谱和LiDAR数据融合"></a>3、高光谱和LiDAR数据融合</h3> <img src="https://i.loli.net/2020/10/21/5Focu7vBWTnyCqx.png" alt="image-20201021133007914" style="zoom:40%;" />
+
+<p>获得xh和xl的特征表示后，如何将它们组合起来成为另一个重要问题。大多数现有的深度学习模型将它们堆叠在一起，使用一些完全连接的层来融合它们。本文提出了一种基于feature-level和decision-level的融合策略。</p>
+<p>设：Rh∈R(128 * 1)——xh的学习特征；Rl∈R(128 * 1)——xl的学习特征</p>
+<blockquote>
+<p>1、基于feature-level层面(特征与特征的融合)：将Rh与Rl特征采用concat，max，sum操作得到一个新的特征 F(Rh, Rl)</p>
+<p>2、我们将这三个要素分别输入到三个输出层f1, f2, f3</p>
+<p>3、基于decision-level层面(输出层的融合)：将所有输出层集成在一起以产生最终结果。整个融合过程可以表述为：</p>
+<img src="https://i.loli.net/2020/10/21/eaGty2zM3vNrVwp.png" alt="image-20201021134718106" style="zoom:33%;" />
+</blockquote>
+<p>其中feature-level的sum和max融合策略：</p>
+<blockquote>
+<p>sum：<img src="https://i.loli.net/2020/10/21/C8W4VQ15qjJtZxw.png" alt="image-20201021135531164" style="zoom:33%;" /></p>
+<p>max：<img src="https://i.loli.net/2020/10/21/ylDexmctaBMsXKn.png" alt="image-20201021135601525" style="zoom:33%;" /></p>
+</blockquote>
+<p>其中decision-leve的融合策略，使用加权求和的方法(y1时Rh经过f1的输出)表示如下：</p>
+<img src="https://i.loli.net/2020/10/21/3FeBK6SmOysWlA1.png" alt="image-20201021140058782" style="zoom:40%;" />
+
+<p>y1的损失函数：</p>
+<img src="https://i.loli.net/2020/10/21/TX19mpKwqMZVDOx.png" alt="image-20201021140239191" style="zoom:40%;" />
+
+<p>整个模型的损失函数：</p>
+<img src="https://i.loli.net/2020/10/21/8keYVu623CZ549v.png" alt="image-20201021140315354" style="zoom:50%;" />
+
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><h3 id="Houston-Data-VS-Trento-Data："><a href="#Houston-Data-VS-Trento-Data：" class="headerlink" title="Houston Data VS Trento Data："></a>Houston Data VS Trento Data：</h3><p><img src="https://i.loli.net/2020/10/21/WBP57SLwXTiOck6.png" alt="image-20201021140603815" style="zoom: 33%;" /><img src="https://i.loli.net/2020/10/21/TBd1e6HZxLbjfqk.png" alt="image-20201021140656051" style="zoom:40%;" /></p>
+<h3 id="实验对比："><a href="#实验对比：" class="headerlink" title="实验对比："></a>实验对比：</h3><p>注：CNN-HS(仅使用HSI训练)、CNN-LiDAR(仅使用LiDAR训练)、CNN-F-C(feature-level层面拼接)、CNN-F-M(feature-level层面maximum)、CNN-F-S(feature-level层面sum)、CNN-DF-C(feature-level和decision-level融合拼接)、CNN-DF-M(feature-level和decision-level融合maximum)、CNN-DF-S(feature-level和decision-level融合sum)</p>
+<img src="https://i.loli.net/2020/10/21/OFVa2JnD9B3mWos.png" alt="image-20201021140903232" style="zoom:80%;" />
+
+<h4 id="可视化的结果："><a href="#可视化的结果：" class="headerlink" title="可视化的结果："></a>可视化的结果：</h4><img src="https://i.loli.net/2020/10/21/YPZQBE9fHkbqvps.png" alt="image-20201021141734992" style="zoom:80%;" />
+
+<h3 id="模型对比："><a href="#模型对比：" class="headerlink" title="模型对比："></a>模型对比：</h3><img src="https://i.loli.net/2020/10/21/TX8ig3a9AmHMEIL.png" alt="image-20201021141854069" style="zoom:80%;" />
+    </div>
+    
+      <div class="prev-or-next">
+        <div class="post-foot-next">
+          
+            <a href="/2020/10/16/Suppressing-Mislabeled-Data-via-Grouping-and-Self-Attention/" target="_self">
+              <i class="iconfont icon-chevronleft"></i>
+              <span>PREV</span>
+            </a>
+          
+        </div>
+        <div class="post-attach">
+          <span class="post-pubtime">2020-10-21</span>
+          <span class="post-tags">
+            
+              <i class="iconfont icon-tags"></i>
+              
+              <span class="span--tag">
+                <a href="/tags/cv/">
+                  #cv
+                </a>
+              </span>
+              
+            
+          </span>
+        </div>
+        <div class="post-foot-prev">
+          
+        </div>
+      </div>
+    
+  </div>
+  
+  <div class="post-catalog" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E6%89%80%E6%8F%90%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%A1%86%E6%9E%B6"><span class="toc-text">1、所提模型的框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E7%BB%8F%E8%BF%87-Coupled-CNNs-%E8%BF%9B%E8%A1%8C%E7%89%B9%E5%BE%81%E5%AD%A6%E4%B9%A0"><span class="toc-text">2、经过 Coupled CNNs 进行特征学习</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81%E9%AB%98%E5%85%89%E8%B0%B1%E5%92%8CLiDAR%E6%95%B0%E6%8D%AE%E8%9E%8D%E5%90%88"><span class="toc-text">3、高光谱和LiDAR数据融合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Houston-Data-VS-Trento-Data%EF%BC%9A"><span class="toc-text">Houston Data VS Trento Data：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E5%AF%B9%E6%AF%94%EF%BC%9A"><span class="toc-text">实验对比：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96%E7%9A%84%E7%BB%93%E6%9E%9C%EF%BC%9A"><span class="toc-text">可视化的结果：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%AF%B9%E6%AF%94%EF%BC%9A"><span class="toc-text">模型对比：</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+  <script src="/js/catalog.js"></script>
+
+
+
+  
+    <div class="comments-container">
+      
+
+
+
+
+
+    </div>
+  
+</div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" href="https://github.com/Sditch/sditch.github.io">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a href="https://github.com/Sditch/sditch.github.io">Copyright © Switch 2020</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+<script src="/js/backtotop.js"></script>
+
+
+    </div>
+  </body>
+</html>

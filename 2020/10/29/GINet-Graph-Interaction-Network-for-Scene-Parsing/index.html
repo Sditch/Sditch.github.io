@@ -114,32 +114,32 @@
 <img src="https://i.loli.net/2020/10/29/t8fYAvOD9PeqLcV.png" alt="image-20201028205349527" style="zoom:45%;" />
 
 <p>言而言之，<strong>本文对视觉图和先验语义图进行推理。语义图用于促进上下文推理，并从视觉图中生成基于样本的语义图。</strong></p>
-<h5 id="本文贡献"><a href="#本文贡献" class="headerlink" title="本文贡献"></a>本文贡献</h5><p>1、本文提出了一种新颖的图交互单元（GI unit）进行上下文建模，该单元结合了基于数据集的语义知识，以促进视觉图的上下文推理。此外，它还学习基于样本的语义图。</p>
+<h4 id="本文贡献"><a href="#本文贡献" class="headerlink" title="本文贡献"></a>本文贡献</h4><p>1、本文提出了一种新颖的图交互单元（GI unit）进行上下文建模，该单元结合了基于数据集的语义知识，以促进视觉图的上下文推理。此外，它还学习基于样本的语义图。</p>
 <p>2、本文提出了一种语义上下文损失（SC-loss）来规范训练过程，该方法增强出现在场景中的类别，抑制不在场景中出现的类别。</p>
 <p>3、本文基于GI unit和SC-loss，提出了一个图交互网络（GINet）进行场景分割。与最新方法相比，本文模型在Pascal-Context和COCO Stuff数据集上显著提高了性能，并在ADE20K数据集上拥有良好地性能。</p>
 <h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p><img src="https://i.loli.net/2020/10/29/garYNMAUWFl8efH.png" alt="image-20201028210530339.png"></p>
 <p>如上图所示：</p>
 <ul>
-<li><p>首先采用经过预训练的ResNet作为backbone：将图片输入resnet得到<strong>视觉特征(Visual Representation)</strong>(特征图)；</p>
-<p>同时：对数据集以类别的形式提取**语义知识(Linguistic Know)**，并将其输入词向量以实现语义的特征表示。</p>
+<li><p>首先采用经过预训练的ResNet作为backbone：将图片输入resnet得到 <strong>视觉特征(Visual Representation)</strong> (特征图)；</p>
+<p>同时：对数据集以类别的形式提取 <strong>语义知识(Linguistic Know)</strong> ，并将其输入词向量以实现语义的特征表示。</p>
 </li>
-<li><p>将 视觉特征(Visual Representation)经过图映射得到<strong>视觉图(VisG)**；语义知识(Linguistic Knowledge)经过图映射得到</strong>语义图(SemG)**</p>
+<li><p>将 视觉特征(Visual Representation)经过图映射得到 <strong>视觉图(VisG)</strong> ；语义知识(Linguistic Knowledge)经过图映射得到 <strong>语义图(SemG)</strong> </p>
 <p>VisG: 体现视觉区域的依赖关系；SemG: 体现语义相关性和标签相关性</p>
 </li>
-<li><p>在GI单元中<strong>图交互(Graph Interaction)操作</strong>，其中语义图用来促进视觉图的上下文推理，并指导生成从视觉图中提取的基于样本的语义图。</p>
+<li><p>在GI单元中 <strong>图交互(Graph Interaction)操作</strong> ，其中语义图用来促进视觉图的上下文推理，并指导生成从视觉图中提取的基于样本的语义图。</p>
 </li>
-<li><p>然后 由GI单元生成演化后的视觉图，生成的视觉图通过**重新映射(Graph Re-Project)**操作，来增强每个局部视觉特征的判别能力；</p>
-<p>在训练阶段，语义图被<strong>SC loss</strong>更新和约束</p>
+<li><p>然后 由GI单元生成演化后的视觉图，生成的视觉图通过 <strong>重新映射(Graph Re-Project)</strong> 操作，来增强每个局部视觉特征的判别能力；</p>
+<p>在训练阶段，语义图被 <strong>SC loss</strong> 更新和约束</p>
 </li>
-<li><p>最后，使用1 * 1的<strong>卷积</strong>，然后进行简单的双线性上采样以获得场景分割结果。</p>
+<li><p>最后，使用1 * 1的 <strong>卷积</strong> ，然后进行简单的双线性上采样以获得场景分割结果。</p>
 </li>
 </ul>
 <h3 id="图交互单元-Graph-Interaction-Unit"><a href="#图交互单元-Graph-Interaction-Unit" class="headerlink" title="图交互单元(Graph Interaction Unit)"></a>图交互单元(Graph Interaction Unit)</h3><p>GI单元的目的是结合基于数据集的语义知识来增强局部特征表示。首先，GI单元将视觉特征和语义特征作为输入，通过生成视觉图和语义图进行上下文推理。其次，在两个图之间进行图交互，以通过视觉节点和语义节点的相似性来演化节点特征。</p>
 <h4 id="图的构造-Graph-Construction"><a href="#图的构造-Graph-Construction" class="headerlink" title="图的构造(Graph Construction)"></a>图的构造(Graph Construction)</h4><ul>
-<li><p><strong>第一步</strong>是将初始的视觉特征和语义特征映射到交互空间。</p>
+<li><p><strong>第一步</strong> 是将初始的视觉特征和语义特征映射到交互空间。</p>
 <p>设视觉特征 X∈R(L * C)，L = H * W；视觉图的特征表示 P∈R(N * D), N：节点数，D：每个节点的特征维度；转置矩阵 Z∈R(N * L)，Z为局部特征X到高层特征P的转置矩阵。其中：P = ZXW  ——  W∈R(C * D)，W为权重</p>
 </li>
-<li><p><strong>第二步</strong>定义一个基于数据集的语义图。</p>
+<li><p><strong>第二步</strong> 定义一个基于数据集的语义图。</p>
 <p>设语义图特征 S∈R(M * D)，S对语义相关性和标签依赖性编码，M：节点数(=数据集的类别)，D：每个节点的特征维度；</p>
 <p>本文使用现成的词向量获得每个类别i∈{0,1,…,M-1}的语义特征：l<del>i</del>∈R(K)，K=300；</p>
 <p>然后，MLP层用于调整语义embedding以适应视觉图的推理。转换过程：S<del>i</del> = MLP(l<del>i</del>), i∈{0, 1, …, M-1}，Si指每个类别的节点特征</p>
@@ -156,7 +156,7 @@
 </blockquote>
 <p>S’ 通过获取邻近节点的特征信息，我们可以提高每个语义节点的特征表示。</p>
 <ul>
-<li><p><strong>S2V</strong>：利用演化的SemG来促进VisG中P’的上下文推理</p>
+<li><p><strong>S2V</strong> ：利用演化的SemG来促进VisG中P’的上下文推理</p>
 <p>具体来说，为了探索VisG和SemG的两个节点之间的关系，本文将它们的特征相似度计算为导向矩阵G^s2v^∈ R(N * M) 。对于VisG中P的一个节点pi‘∈ R(D)和SemG中的一个节点sj’∈R(D)，我们可以计算出指导信息G<del>i;j</del>^s2v^ ，它表示SemG中的节点sj’对节点pi’的权重分配：</p>
 <img src="https://i.loli.net/2020/10/29/A54sVb19MOvnKcL.png" alt="image-20201029001351519" style="zoom:45%;" />
 
@@ -167,7 +167,7 @@
 
 <p>其中：W<del>s2v</del> ∈R(D * D)为可训练权重，β<del>s2v</del>∈R(N)为0初始化的可学习向量，可通过梯度下降法更新。这里的求和可被求均值，最大值或拼接算法代替。由于导引矩阵G<del>s2v</del>的使用，本文有效地构建了视觉区域与语义概念之间的相关性，并将相应的语义特征纳入了视觉节点的特征表示中。</p>
 </li>
-<li><p>V2S：与等式5类似，构造G^v2s^∈ R(M * N) ，令i∈{1, …, M}，j∈{1, …, N}：</p>
+<li><p><strong>V2S</strong> ：与等式5类似，构造G^v2s^∈ R(M * N) ，令i∈{1, …, M}，j∈{1, …, N}：</p>
 <img src="https://i.loli.net/2020/10/29/j86xADTJqaKZcXh.png" alt="image-20201029002604737" style="zoom:40%;" />
 
 <p>以及更新SemG的图特征：</p>
@@ -230,7 +230,7 @@
   <div class="post-catalog" id="catalog">
     <div class="title">目录</div>
     <div class="catalog-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-text">介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%AC%E6%96%87%E8%B4%A1%E7%8C%AE"><span class="toc-text">本文贡献</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E4%BA%A4%E4%BA%92%E5%8D%95%E5%85%83-Graph-Interaction-Unit"><span class="toc-text">图交互单元(Graph Interaction Unit)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%BE%E7%9A%84%E6%9E%84%E9%80%A0-Graph-Construction"><span class="toc-text">图的构造(Graph Construction)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%BE%E4%BA%A4%E4%BA%92-Graph-Interaction"><span class="toc-text">图交互(Graph Interaction)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#IG%E5%8D%95%E5%85%83%E8%BE%93%E5%87%BA-Unit-outputs"><span class="toc-text">IG单元输出(Unit outputs)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E4%B9%89%E4%B8%8A%E4%B8%8B%E6%96%87%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0-Semantic-Context-Loss"><span class="toc-text">语义上下文损失函数(Semantic Context Loss)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-text">实验</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-text">介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AC%E6%96%87%E8%B4%A1%E7%8C%AE"><span class="toc-text">本文贡献</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E4%BA%A4%E4%BA%92%E5%8D%95%E5%85%83-Graph-Interaction-Unit"><span class="toc-text">图交互单元(Graph Interaction Unit)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%BE%E7%9A%84%E6%9E%84%E9%80%A0-Graph-Construction"><span class="toc-text">图的构造(Graph Construction)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%BE%E4%BA%A4%E4%BA%92-Graph-Interaction"><span class="toc-text">图交互(Graph Interaction)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#IG%E5%8D%95%E5%85%83%E8%BE%93%E5%87%BA-Unit-outputs"><span class="toc-text">IG单元输出(Unit outputs)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E4%B9%89%E4%B8%8A%E4%B8%8B%E6%96%87%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0-Semantic-Context-Loss"><span class="toc-text">语义上下文损失函数(Semantic Context Loss)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-text">实验</span></a></li></ol>
     </div>
   </div>
 

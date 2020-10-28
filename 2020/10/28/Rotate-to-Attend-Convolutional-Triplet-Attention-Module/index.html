@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>Rotate to Attend: Convolutional Triplet Attention Module | Sditch</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.ico">
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/"><img src="/images/34339465.jpg" alt=""></a>
+    <div class="nickname"><a href="/">Sditch</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">归档</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+<script src="/js/activeNav.js"></script>
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+
+
+
+
+
+
+
+<!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+<div class="container post-details" id="post-details">
+  <div class="post-content">
+    <div class="post-title">Rotate to Attend: Convolutional Triplet Attention Module</div>
+    <div class="post-attach">
+      <span class="post-pubtime">2020-10-28</span>
+      <span class="post-tags">
+        
+          <i class="iconfont icon-tags"></i>
+          
+          <span class="span--tag">
+            <a href="/tags/cv/">
+              #cv
+            </a>
+          </span>
+          
+        
+      </span>
+    </div>
+    <div class="markdown-body">
+      <blockquote>
+<p>论文地址：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2010.03045">https://arxiv.org/abs/2010.03045</a></p>
+</blockquote>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>近年来，卷积神经网络在许多计算机视觉任务中取得了成功。人们通过在通道之间或空间之间使用注意力机制来加权进而提升网络的性能，典型的比如SENet，CBAM，BAM等。本文提出了一种新的注意力机制—— <strong>triplet attention</strong>。与之前的注意力机制不同，本文方法有两个<strong>优点</strong>：</p>
+<p>1、triplet attention以可忽略的计算开销获取丰富的特征表示</p>
+<p>2、triplet attention没有降维操作(CBAM有)，它强调了多维交互的重要性，消除了通道和权重之间的indirect correspondence。</p>
+<p>本文的triplet attention主要捕获跨维度的交互。即对于三维图像(C, H, W)，分别探究(C, H)、(C, W)、(H, W)的维度间的关系。</p>
+<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><h3 id="1、回顾CBAM的通道注意力"><a href="#1、回顾CBAM的通道注意力" class="headerlink" title="1、回顾CBAM的通道注意力"></a>1、回顾CBAM的通道注意力</h3><p>CBAM的通道注意力表示为：</p>
+<img src="https://i.loli.net/2020/10/28/YWaiT9zXx5Bekwj.png" alt="image-20201028144619647" style="zoom:45%;" />
+
+<p>其中，g(x)代表平均池化GAP，δ(x)代表最大池化GMP，W<del>0</del>，W<del>1</del>代表权重</p>
+<p>如下图所示，W<del>0</del>大小: C * C/r，W<del>1</del>大小: C/r * C, r是参数</p>
+<p><strong>作者认为：通道数由C–&gt;C/r –&gt;C被投影到一个较低空间又映射回去，造成了各通道间对应关系的损失</strong></p>
+<p><img src="https://i.loli.net/2020/10/28/4WLdhGCeSQE9FHA.png" alt="image-20201028141046767"></p>
+<h3 id="2、Triplet-Attention"><a href="#2、Triplet-Attention" class="headerlink" title="2、Triplet Attention"></a>2、Triplet Attention</h3><p><img src="https://i.loli.net/2020/10/28/Tu1EjFYmc64Jdve.png" alt="image-20201028145757517"></p>
+<p>本文目的：如何在不涉及任何降维的情况下构建高效的通道注意力模型。本文提出了一种几乎没有参数的注意力机制来建模通道注意力和空间注意力——Triplet Attention。</p>
+<p>本文模型由三个分支组成，如上图所示。第一二个分支负责<strong>跨纬度交互</strong>，即C与H或C与W维。第三个分支类似CBAM模型 ，建立空间注意力。所有三个分支的输出通过平均求和得到本文的注意力特征。</p>
+<ul>
+<li><strong>Cross-Dimension Interaction(跨纬度交互)</strong></li>
+</ul>
+<p>传统的通道注意力将一个通道的图像池化为一个像素点，这导致了空间信息的重大损失。 CBAM 引入了空间注意力，但是其<strong>缺点</strong>：空间注意力与通道注意力彼此分开运算。因此，本文提出了跨维度交互的概念。该概念通过捕获输入张量的空间维度和通道维度之间的交互来解决此缺点。即将<strong>通道维度C与空间维度H共同运算，C与W共同运算。</strong></p>
+<ul>
+<li><strong>Z-pool</strong></li>
+</ul>
+<p>Z-pool层将tensor的第0维减少到2维。这两维由平均池化和最大池化拼接而成。如对于图像(C, H, W)，经过Z-pool层之后为(2, H, W)</p>
+<img src="https://i.loli.net/2020/10/28/3I5JSZk7wOyNz19.png" alt="image-20201028153023782" style="zoom:45%;" />
+
+<ul>
+<li><p><strong>Triplet Attention(见上图) —— X ∈ R(C, H, W)</strong></p>
+<ul>
+<li><p>第一个分支，建立H与C之间的交互</p>
+<blockquote>
+<p>1、将输入X沿H轴逆时针旋转90°，得到X1 ∈ R(W, H, C)<br>2、将X1经过Z-pool层，得到X1* ∈R(2, H, C)<br>3、将X1* 经过卷积(卷积核为k * k)和BN层，得到新的输出维度为R(1, H, C)<br>4、将新的输出经过sigmoid得到权重<br>5、将权重施加于X1中<br>6、将X1沿H轴顺时针旋转90°得到新的 X∈(C, H, W)，即y1</p>
+</blockquote>
+</li>
+<li><p>第二个分支，建立W与C之间的交互</p>
+<blockquote>
+<p>1、将输入X沿W轴逆时针旋转90°，得到X2 ∈ R(H, C, W)<br>2、将X2经过Z-pool层，得到X2* ∈R(2, C, W)<br>3、将X2* 经过卷积(卷积核为k * k)和BN层，得到新的输出维度为R(1, C, W)<br>4、将新的输出经过sigmoid得到权重<br>5、将权重施加于X2中<br>6、将X2沿W轴顺时针旋转90°得到新的 X∈(C, H, W)，即y2</p>
+</blockquote>
+</li>
+<li><p>第三个分支，空间注意力</p>
+<blockquote>
+<p>1、将X3经过Z-pool层，得到X3* ∈R(2, H, W)<br>2、将X3* 经过卷积(卷积核为k * k)和BN层，得到新的输出维度为R(1, H, W)<br>3、将新的输出经过sigmoid得到权重<br>4、将权重施加于X3中,得到新的 X∈(C, H, W)，即y3</p>
+</blockquote>
+</li>
+<li><p>输出y：y = 1/3 (y1 + y2 + y3)</p>
+</li>
+</ul>
+</li>
+<li><p><strong>参数复杂度分析</strong></p>
+<p>下图体现了本文模型增加的参数可忽略。其中，r：MLP(CBAM的通道注意力)的缩减因子；k：二维卷积核的大小(k&lt;&lt;C)</p>
+</li>
+</ul>
+<img src="https://i.loli.net/2020/10/28/5riFgMV1Se8Dfct.png" alt="image-20201028155436022" style="zoom:50%;" />
+
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><ul>
+<li>图像分类</li>
+</ul>
+<p><img src="https://i.loli.net/2020/10/28/EBI7bQ8OeF6oiJZ.png" alt="image-20201028160056685.png"></p>
+<ul>
+<li><p>目标检测</p>
+<ul>
+<li><p><img src="https://i.loli.net/2020/10/28/QDalGyruFpMgEOb.png" alt="image-20201028160212925"></p>
+</li>
+<li><img src="https://i.loli.net/2020/10/28/YnFiKLBSClfD8zm.png" alt="image-20201028160259664" style="zoom:60%;" />
+
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="消融研究"><a href="#消融研究" class="headerlink" title="消融研究"></a>消融研究</h2><ul>
+<li><img src="https://i.loli.net/2020/10/28/GxAdMPaOXbN6fV2.png" alt="image-20201028160509114" style="zoom:67%;" />
+
+</li>
+</ul>
+
+    </div>
+    
+      <div class="prev-or-next">
+        <div class="post-foot-next">
+          
+            <a href="/2020/10/21/Classification-of-Hyperspectral-and-LiDAR-Data-Using-Coupled-CNNs/" target="_self">
+              <i class="iconfont icon-chevronleft"></i>
+              <span>PREV</span>
+            </a>
+          
+        </div>
+        <div class="post-attach">
+          <span class="post-pubtime">2020-10-28</span>
+          <span class="post-tags">
+            
+              <i class="iconfont icon-tags"></i>
+              
+              <span class="span--tag">
+                <a href="/tags/cv/">
+                  #cv
+                </a>
+              </span>
+              
+            
+          </span>
+        </div>
+        <div class="post-foot-prev">
+          
+        </div>
+      </div>
+    
+  </div>
+  
+  <div class="post-catalog" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B"><span class="toc-text">模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E5%9B%9E%E9%A1%BECBAM%E7%9A%84%E9%80%9A%E9%81%93%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="toc-text">1、回顾CBAM的通道注意力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81Triplet-Attention"><span class="toc-text">2、Triplet Attention</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-text">实验结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B6%88%E8%9E%8D%E7%A0%94%E7%A9%B6"><span class="toc-text">消融研究</span></a></li></ol>
+    </div>
+  </div>
+
+  <script src="/js/catalog.js"></script>
+
+
+
+  
+    <div class="comments-container">
+      
+
+
+
+
+
+    </div>
+  
+</div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" href="https://github.com/Sditch/sditch.github.io">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a href="https://github.com/Sditch/sditch.github.io">Copyright © Switch 2020</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+<script src="/js/backtotop.js"></script>
+
+
+    </div>
+  </body>
+</html>

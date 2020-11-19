@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>A³ CLNN: Spatial, Spectral and Multiscale Attention ConvLSTM Neural Network for Multisource Remote Sensing Data Classification | Sditch</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.ico">
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/"><img src="/images/34339465.jpg" alt=""></a>
+    <div class="nickname"><a href="/">Sditch</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">归档</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+<script src="/js/activeNav.js"></script>
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+
+
+
+
+
+
+
+<!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+<div class="container post-details" id="post-details">
+  <div class="post-content">
+    <div class="post-title">A³ CLNN: Spatial, Spectral and Multiscale Attention ConvLSTM Neural Network for Multisource Remote Sensing Data Classification</div>
+    <div class="post-attach">
+      <span class="post-pubtime">2020-11-19</span>
+      <span class="post-tags">
+        
+          <i class="iconfont icon-tags"></i>
+          
+          <span class="span--tag">
+            <a href="/tags/cv/">
+              #cv
+            </a>
+          </span>
+          
+        
+      </span>
+    </div>
+    <div class="markdown-body">
+      <blockquote>
+<p>论文地址：<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9234528">https://ieeexplore.ieee.org/document/9234528</a></p>
+</blockquote>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>本文提出了一种新的方法利用高光谱图像与LiDAR数据的互补性进行特征提取和多源遥感数据分类。即：一种新的双通道空间、光谱和多尺度注意力卷积长短期记忆神经网络(dual-channel A³ CLNN)。本文提出了一种混合注意力学习机制（三级融合策略）来完全整合HSI和LiDAR数据的空间、光谱和多尺度信息；并设计了一种新颖的逐步训练策略来产生最终的分类结果。</p>
+<p>其中，三级融合策略如下：</p>
+<p>第一级融合阶段：提出了混合注意力学习方法——以利用LiDAR数据和HSI数据中的空间信息和光谱信息；</p>
+<p>第二级融合策略：联合两种类型数据的特征输出作为分类层的输入；</p>
+<p>第三级融合策略：LiDAR数据的特征在融合网络的顶部再次被使用——以充分利用LiDAR数据。</p>
+<p>逐步训练策略具体如下：</p>
+<ul>
+<li>HSI和LiDAR分支首先被单独训练以获得初始的特征</li>
+<li>训练所得的特征被用来初始化一个本文所提的整个融合网络</li>
+<li>使用一个多任务的损失函数对dual-channel A³ CLNN优化</li>
+</ul>
+<p>贡献：</p>
+<ul>
+<li>本文开发了可学习的空谱注意力模块以获得空间增强和光谱增强的特征</li>
+<li>本文设计了一种可学习的多尺度残差注意力模型以增强整个模型的多尺度信息表达能力</li>
+<li>本文提出了三级融合策略和逐步训练策略</li>
+</ul>
+<h2 id="Dual-Channel-A³CLNN"><a href="#Dual-Channel-A³CLNN" class="headerlink" title="Dual-Channel A³CLNN"></a>Dual-Channel A³CLNN</h2><h3 id="A、模型预览"><a href="#A、模型预览" class="headerlink" title="A、模型预览"></a>A、模型预览</h3><p><img src="https://i.loli.net/2020/11/19/vmxuXYUcCfMr67N.png" alt="image-20201119094258710.png"></p>
+<h3 id="B、Composite-Attention-Learning"><a href="#B、Composite-Attention-Learning" class="headerlink" title="B、Composite Attention Learning"></a>B、Composite Attention Learning</h3><ul>
+<li><h4 id="光谱注意力模块-SeAB"><a href="#光谱注意力模块-SeAB" class="headerlink" title="光谱注意力模块(SeAB)"></a>光谱注意力模块(SeAB)</h4><p><img src="https://i.loli.net/2020/11/19/8jd9octUWxIv4sN.png" alt="image-20201119094854296.png"></p>
+<p>设X<del>l</del>^H^ ∈ R(ωl * hl * sl * cl)是第l个ConvLSTM3D层或初始的HSI数据的输出，SeAB的目的是学习一个注意力向量α <del>Se</del> ^H^ .</p>
+<p>如图2所示：X <del>l</del> ^H^ 首先沿着光谱通道分解，被分解为sl个二维的分量Band。然后将每个Band送入一个卷积核为3 * 3的ConvLSTM2D层中，以建模光谱通道的长距离依赖；接着再被送进一个卷积核为1 * 1的ConvLSTM2D层中。将所有光谱通道(sl个)组成为非归一化注意力图Z <del>Se</del> ^H^  ∈ R(ωl * hl * sl * 1)(即由图中黄色方块构成)，将其经过池化(Pooling)得到注意力向量z<del>Se</del>^H^ ，长度为sl。最后经过Softmax函数得到α <del>Se</del> ^H^ . 其公式如下：</p>
+<img src="https://i.loli.net/2020/11/19/7qM2gcF8sWjlxZ3.png" alt="image-20201119102309998" style="zoom:45%;" />
+
+<p>显然SeAB模块也是一个即插即用的模块。</p>
+</li>
+<li><h4 id="空间注意力模块-SaAB"><a href="#空间注意力模块-SaAB" class="headerlink" title="空间注意力模块(SaAB)"></a>空间注意力模块(SaAB)</h4><p><img src="https://i.loli.net/2020/11/19/J6gbBvnazlyXqh5.png" alt="image-20201119102718557.png"></p>
+<p>与SeAB类似，由于LiDAR数据为3维，故不需沿光谱通道分解，由于是给图像的空间添加注意力，故经过1 * 1的ConvLSTM2D操作得到的ωl * hl * 1的特征直接经过softmax得到ωl * hl的注意力权重。其公式如下：</p>
+<img src="https://i.loli.net/2020/11/19/6MVjkv4y1dCbiYO.png" alt="image-20201119103251142" style="zoom:30%;" />
+
+<p>同样SaAB为一个即插即用的模块。</p>
+</li>
+</ul>
+<h3 id="C、多尺度残差注意力模块-MSRAB"><a href="#C、多尺度残差注意力模块-MSRAB" class="headerlink" title="C、多尺度残差注意力模块(MSRAB)"></a>C、多尺度残差注意力模块(MSRAB)</h3><p><img src="https://i.loli.net/2020/11/19/UsHMDozuvRp7W69.png" alt="image-20201119104543382.png"></p>
+<p>以LiDAR分支为例，X<del>l</del> ^L^ ∈R(tl * wl * hl * cl)为MSRAB模块的输入，X<del>l+1</del> ^L^ 为输出。其中tl为ConvLSTM2D层的时间步长维。</p>
+<p>将X<del>l</del> ^L^ 分别经过1、3、5大小的卷积核卷积(捕获多尺度信息)，得到三个新的特征，将这三个特征在时间步长的维度联合在一起，并以非线性的方式学习，得到Z<del>MSR</del> ^L^ ∈R(3tl * wl * hl * cl)，经过GAP和softmax得到多尺度的注意力向量 α <del>MSR</del> ^L^ ，长度为3tl. 公式如下：</p>
+<img src="https://i.loli.net/2020/11/19/e39JtMCVxQ5G7ra.png" alt="image-20201119110815731" style="zoom:30%;" />
+
+<p>将经过残差块网络所得的特征经过a * a的卷积再加上初始的X <del>l</del> ^L^ ：</p>
+<img src="https://i.loli.net/2020/11/19/8yPjwSctRKm3rLY.png" alt="image-20201119113033133" style="zoom:50%;" />
+
+<p>MSRAB可以用作多尺度信息增强模块，为整个模型带来更大的感受野，并且MSRAB可以自适应地关注各个尺度上的重要区域。</p>
+<h3 id="D、高光谱分支的多尺度光谱注意力神经网络"><a href="#D、高光谱分支的多尺度光谱注意力神经网络" class="headerlink" title="D、高光谱分支的多尺度光谱注意力神经网络"></a>D、高光谱分支的多尺度光谱注意力神经网络</h3><p>即图一的整个上半部分。将HSI以PCA降维到K个方向，然后选取每个像素的邻近s * s区域作为该像素的空间上下文信息。故每个像素块(s * s * k)为每个像素点的输入。将其转换为长度为τ的时间序列，即转化为ConvLSTM3D的输入格式，对每个ConvLSTM3D层的输出应用SeAB提取光谱增强的特征(本文设置ConvLSTM3D为1层)。</p>
+<p>将池化得到的操作经过MSRAB模块后应用BN(Batch Normalization)操作和swish函数进行正则化。接着应用GAP层代替FC层将特征空间映射到类标签空间。这样操作可直接赋予每个通道实际的类别意义，抑制过拟合，减少参数，减少模型对输入尺寸的限制。而后只用softmax预测每个类别c的条件概率分布，具体如下：</p>
+<img src="https://i.loli.net/2020/11/19/MXeWljKtzS6coUL.png" alt="image-20201119132117252" style="zoom:50%;" />
+
+<h3 id="E、LiDAR分支的多尺度空间注意力神经网络"><a href="#E、LiDAR分支的多尺度空间注意力神经网络" class="headerlink" title="E、LiDAR分支的多尺度空间注意力神经网络"></a>E、LiDAR分支的多尺度空间注意力神经网络</h3><p>同样，对W * H大小的LiDAR数据集以s * s大小划分数据集patch。将其分解转化作为ConvLSTM2D的输入，与D部分类似，经过SaAB、pooling、MSRAB、BN、Swish、GAP、softmax得到条件概率分布P <del>c</del> ^L^ ，以及交叉熵存实Loss <del>L</del> 。</p>
+<h3 id="F、三层融合策略"><a href="#F、三层融合策略" class="headerlink" title="F、三层融合策略"></a>F、三层融合策略</h3><p>三次融合如图1三次红色箭头。</p>
+<p>第一次融合：是为了充分利用LiDAR数据的空间信息以增强HSI的特征表示。公式表示如下：</p>
+<img src="https://i.loli.net/2020/11/19/XuHtCVbLc5QzeAl.png" alt="image-20201119133446004" style="zoom:50%;" />
+
+<p>第二次融合：每个分支的MSRAB的输出得到空谱维度的级联，而后使用ConvLSTM3D和GAP。公式：</p>
+<img src="https://i.loli.net/2020/11/19/A85yt2mLcInYHPS.png" alt="image-20201119133808902" style="zoom:50%;" />
+
+<p>第三次融合：HSI的特征信息比起LiDAR的多得多，故最后将LiDAR经过GAP得到的特征与公式11所得的特征连接，X <del>F</del> =  [ X ^F^ <del>GAP</del> , X ^L^ <del>GAP</del> ],增强LiDAR数据信息的表示。最后使用softmax函数得到分布。最后采用交叉熵损失函数。</p>
+<h3 id="G、损失函数与网络训练策略"><a href="#G、损失函数与网络训练策略" class="headerlink" title="G、损失函数与网络训练策略"></a>G、损失函数与网络训练策略</h3><img src="https://i.loli.net/2020/11/19/xn5w3rLjvkpchZY.png" alt="image-20201119134333387" style="zoom:50%;" />
+
+<p>α、β、γ本文设为1. 训练过程中先使用Nstep1和Nstep2个epoch分别对LiDAR和HSI分支训练。而后受迁移学习启发，将本文的融合网络由这两个预训练分支初始化，并用公式12所提的损失函数训练Nsteps轮。</p>
+ <img src="https://i.loli.net/2020/11/19/R5EMlGkCb7xzqFf.png" alt="image-20201119134811148" style="zoom:40%;" />
+
+<h2 id="实验结果-部分"><a href="#实验结果-部分" class="headerlink" title="实验结果(部分)"></a>实验结果(部分)</h2><img src="https://i.loli.net/2020/11/19/BkhIHvGjxYVpmJR.png" alt="image-20201119135157699" style="zoom:50%;" />
+    </div>
+    
+      <div class="prev-or-next">
+        <div class="post-foot-next">
+          
+            <a href="/2020/10/29/GINet-Graph-Interaction-Network-for-Scene-Parsing/" target="_self">
+              <i class="iconfont icon-chevronleft"></i>
+              <span>PREV</span>
+            </a>
+          
+        </div>
+        <div class="post-attach">
+          <span class="post-pubtime">2020-11-19</span>
+          <span class="post-tags">
+            
+              <i class="iconfont icon-tags"></i>
+              
+              <span class="span--tag">
+                <a href="/tags/cv/">
+                  #cv
+                </a>
+              </span>
+              
+            
+          </span>
+        </div>
+        <div class="post-foot-prev">
+          
+        </div>
+      </div>
+    
+  </div>
+  
+  <div class="post-catalog" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dual-Channel-A%C2%B3CLNN"><span class="toc-text">Dual-Channel A³CLNN</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#A%E3%80%81%E6%A8%A1%E5%9E%8B%E9%A2%84%E8%A7%88"><span class="toc-text">A、模型预览</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B%E3%80%81Composite-Attention-Learning"><span class="toc-text">B、Composite Attention Learning</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%89%E8%B0%B1%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%A8%A1%E5%9D%97-SeAB"><span class="toc-text">光谱注意力模块(SeAB)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%A8%A1%E5%9D%97-SaAB"><span class="toc-text">空间注意力模块(SaAB)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C%E3%80%81%E5%A4%9A%E5%B0%BA%E5%BA%A6%E6%AE%8B%E5%B7%AE%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%A8%A1%E5%9D%97-MSRAB"><span class="toc-text">C、多尺度残差注意力模块(MSRAB)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#D%E3%80%81%E9%AB%98%E5%85%89%E8%B0%B1%E5%88%86%E6%94%AF%E7%9A%84%E5%A4%9A%E5%B0%BA%E5%BA%A6%E5%85%89%E8%B0%B1%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="toc-text">D、高光谱分支的多尺度光谱注意力神经网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#E%E3%80%81LiDAR%E5%88%86%E6%94%AF%E7%9A%84%E5%A4%9A%E5%B0%BA%E5%BA%A6%E7%A9%BA%E9%97%B4%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="toc-text">E、LiDAR分支的多尺度空间注意力神经网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#F%E3%80%81%E4%B8%89%E5%B1%82%E8%9E%8D%E5%90%88%E7%AD%96%E7%95%A5"><span class="toc-text">F、三层融合策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G%E3%80%81%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E4%B8%8E%E7%BD%91%E7%BB%9C%E8%AE%AD%E7%BB%83%E7%AD%96%E7%95%A5"><span class="toc-text">G、损失函数与网络训练策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C-%E9%83%A8%E5%88%86"><span class="toc-text">实验结果(部分)</span></a></li></ol>
+    </div>
+  </div>
+
+  <script src="/js/catalog.js"></script>
+
+
+
+  
+    <div class="comments-container">
+      
+
+
+
+
+
+    </div>
+  
+</div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" href="https://github.com/Sditch/sditch.github.io">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a href="https://github.com/Sditch/sditch.github.io">Copyright © Switch 2020</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+<script src="/js/backtotop.js"></script>
+
+
+    </div>
+  </body>
+</html>

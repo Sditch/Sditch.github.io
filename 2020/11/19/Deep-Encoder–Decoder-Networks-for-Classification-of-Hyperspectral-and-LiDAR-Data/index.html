@@ -109,9 +109,7 @@
 <p>论文地址：<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/9179756">https://ieeexplore.ieee.org/abstract/document/9179756</a></p>
 <p>论文代码：<a href="https://github.com/danfenghong/IEEE_GRSL_EndNet">https://github.com/danfenghong/IEEE_GRSL_EndNet</a></p>
 </blockquote>
-<p>本文目的：本文提出EndNet来对HSI和LiDAR数据分类。</p>
-<p>模型：</p>
-<p><img src="https://i.loli.net/2020/11/19/uqw9Yfy835FcPpV.png" alt="image-20201119191103134.png"></p>
+<h3 id="本文目的：本文提出EndNet来对HSI和LiDAR数据分类。"><a href="#本文目的：本文提出EndNet来对HSI和LiDAR数据分类。" class="headerlink" title="本文目的：本文提出EndNet来对HSI和LiDAR数据分类。"></a>本文目的：本文提出EndNet来对HSI和LiDAR数据分类。</h3><h3 id="模型："><a href="#模型：" class="headerlink" title="模型："></a>模型：</h3><p><img src="https://i.loli.net/2020/11/19/uqw9Yfy835FcPpV.png" alt="image-20201119191103134.png"></p>
 <p>如图1所示，EndNet框架组成：</p>
 <ul>
 <li>特征提取网络(FE-Net或encoder)</li>
@@ -127,7 +125,7 @@
 <p>如图1所示，将FE-Net网络得到的两个输出concat操作后输入F-Net，F-Net由<strong>一系列的编码层、BN层、ReLU层</strong>(即h函数)组成。F-Net的输出经过softmax得到ont-hot标签。</p>
 <h4 id="C、R-Net：用于提高从FE-Net提取的特征的融合水平"><a href="#C、R-Net：用于提高从FE-Net提取的特征的融合水平" class="headerlink" title="C、R-Net：用于提高从FE-Net提取的特征的融合水平"></a>C、R-Net：用于提高从FE-Net提取的特征的融合水平</h4><img src="https://i.loli.net/2020/11/19/OQpfawoAJb5TKmP.png" alt="image-20201119204127536" style="zoom:50%;" />
 
-
+<h4 id="D、总目标函数："><a href="#D、总目标函数：" class="headerlink" title="D、总目标函数："></a>D、总目标函数：</h4><img src="https://i.loli.net/2020/11/19/qe3RZypaEBOvKCw.png" style="zoom:50%;" />
 
 <p>FE-Net、F-Net、R-Net具体结构如表一：</p>
 <p><img src="https://i.loli.net/2020/11/19/AVlPRrLW6wICeGd.png" alt="image-20201119204542003.png"></p>
@@ -169,7 +167,7 @@
   <div class="post-catalog" id="catalog">
     <div class="title">目录</div>
     <div class="catalog-content">
-      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#A%E3%80%81FE-Net%EF%BC%9A%E4%BB%A5%E5%88%86%E5%B1%82%E5%BD%A2%E5%BC%8F%E6%8F%90%E5%8F%96%E7%89%B9%E5%BE%81"><span class="toc-text">A、FE-Net：以分层形式提取特征</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#B%E3%80%81F-Net%EF%BC%9A%E7%94%A8%E4%BA%8E%E8%9E%8D%E5%90%88FE-Net%E6%8F%90%E5%8F%96%E7%9A%84%E7%89%B9%E5%BE%81"><span class="toc-text">B、F-Net：用于融合FE-Net提取的特征</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#C%E3%80%81R-Net%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%8F%90%E9%AB%98%E4%BB%8EFE-Net%E6%8F%90%E5%8F%96%E7%9A%84%E7%89%B9%E5%BE%81%E7%9A%84%E8%9E%8D%E5%90%88%E6%B0%B4%E5%B9%B3"><span class="toc-text">C、R-Net：用于提高从FE-Net提取的特征的融合水平</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E6%96%87%E7%9B%AE%E7%9A%84%EF%BC%9A%E6%9C%AC%E6%96%87%E6%8F%90%E5%87%BAEndNet%E6%9D%A5%E5%AF%B9HSI%E5%92%8CLiDAR%E6%95%B0%E6%8D%AE%E5%88%86%E7%B1%BB%E3%80%82"><span class="toc-text">本文目的：本文提出EndNet来对HSI和LiDAR数据分类。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%EF%BC%9A"><span class="toc-text">模型：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#A%E3%80%81FE-Net%EF%BC%9A%E4%BB%A5%E5%88%86%E5%B1%82%E5%BD%A2%E5%BC%8F%E6%8F%90%E5%8F%96%E7%89%B9%E5%BE%81"><span class="toc-text">A、FE-Net：以分层形式提取特征</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#B%E3%80%81F-Net%EF%BC%9A%E7%94%A8%E4%BA%8E%E8%9E%8D%E5%90%88FE-Net%E6%8F%90%E5%8F%96%E7%9A%84%E7%89%B9%E5%BE%81"><span class="toc-text">B、F-Net：用于融合FE-Net提取的特征</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#C%E3%80%81R-Net%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%8F%90%E9%AB%98%E4%BB%8EFE-Net%E6%8F%90%E5%8F%96%E7%9A%84%E7%89%B9%E5%BE%81%E7%9A%84%E8%9E%8D%E5%90%88%E6%B0%B4%E5%B9%B3"><span class="toc-text">C、R-Net：用于提高从FE-Net提取的特征的融合水平</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#D%E3%80%81%E6%80%BB%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="toc-text">D、总目标函数：</span></a></li></ol></li></ol>
     </div>
   </div>
 

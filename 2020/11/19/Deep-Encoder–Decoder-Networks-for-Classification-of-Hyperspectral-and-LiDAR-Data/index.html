@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>Deep Encoder–Decoder Networks for Classification of Hyperspectral and LiDAR Data | Sditch</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.ico">
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/"><img src="/images/34339465.jpg" alt=""></a>
+    <div class="nickname"><a href="/">Sditch</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">归档</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+<script src="/js/activeNav.js"></script>
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+
+
+
+
+
+
+
+<!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+<div class="container post-details" id="post-details">
+  <div class="post-content">
+    <div class="post-title">Deep Encoder–Decoder Networks for Classification of Hyperspectral and LiDAR Data</div>
+    <div class="post-attach">
+      <span class="post-pubtime">2020-11-19</span>
+      <span class="post-tags">
+        
+          <i class="iconfont icon-tags"></i>
+          
+          <span class="span--tag">
+            <a href="/tags/cv/">
+              #cv
+            </a>
+          </span>
+          
+        
+      </span>
+    </div>
+    <div class="markdown-body">
+      <blockquote>
+<p>论文地址：<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/9179756">https://ieeexplore.ieee.org/abstract/document/9179756</a></p>
+<p>论文代码：<a href="https://github.com/danfenghong/IEEE_GRSL_EndNet">https://github.com/danfenghong/IEEE_GRSL_EndNet</a></p>
+</blockquote>
+<p>本文目的：本文提出EndNet来对HSI和LiDAR数据分类。</p>
+<p>模型：</p>
+<p><img src="https://i.loli.net/2020/11/19/uqw9Yfy835FcPpV.png" alt="image-20201119191103134.png"></p>
+<p>如图1所示，EndNet框架组成：</p>
+<ul>
+<li>特征提取网络(FE-Net或encoder)</li>
+<li>带标签的融合模块(F-Net)</li>
+<li>reconstruction(or decoder)网络(R-Net)</li>
+</ul>
+<h4 id="A、FE-Net：以分层形式提取特征"><a href="#A、FE-Net：以分层形式提取特征" class="headerlink" title="A、FE-Net：以分层形式提取特征"></a>A、FE-Net：以分层形式提取特征</h4><p>对于两个输入X1∈R(d1 * N)，X2∈R(d2 * N)，d1、d2为输入维度，N为像素数。其第l层的第i个像素的特征表示为：</p>
+<img src="https://i.loli.net/2020/11/19/3ONBZUQ2Vcw8ePE.png" alt="image-20201119192115882" style="zoom:45%;" />
+
+<p>s = 1，2表示不同的模态，f为非线性函数(sigmoid/ReLU)，在激活函数之前加入BN层。</p>
+<h4 id="B、F-Net：用于融合FE-Net提取的特征"><a href="#B、F-Net：用于融合FE-Net提取的特征" class="headerlink" title="B、F-Net：用于融合FE-Net提取的特征"></a>B、F-Net：用于融合FE-Net提取的特征</h4><img src="https://i.loli.net/2020/11/19/zgqh8rTcNDUvmE7.png" alt="image-20201119204248596" style="zoom:50%;" />
+
+<p>如图1所示，将FE-Net网络得到的两个输出concat操作后输入F-Net，F-Net由<strong>一系列的编码层、BN层、ReLU层</strong>(即h函数)组成。F-Net的输出经过softmax得到ont-hot标签。</p>
+<h4 id="C、R-Net：用于提高从FE-Net提取的特征的融合水平"><a href="#C、R-Net：用于提高从FE-Net提取的特征的融合水平" class="headerlink" title="C、R-Net：用于提高从FE-Net提取的特征的融合水平"></a>C、R-Net：用于提高从FE-Net提取的特征的融合水平</h4><img src="https://i.loli.net/2020/11/19/OQpfawoAJb5TKmP.png" alt="image-20201119204127536" style="zoom:50%;" />
+
+
+
+<p>FE-Net、F-Net、R-Net具体结构如表一：</p>
+<p><img src="https://i.loli.net/2020/11/19/AVlPRrLW6wICeGd.png" alt="image-20201119204542003.png"></p>
+<p>部分实验结果上表一，C1-C15表示类别</p>
+
+    </div>
+    
+      <div class="prev-or-next">
+        <div class="post-foot-next">
+          
+            <a href="/2020/11/19/A%C2%B3-CLNN-Spatial-Spectral-and-Multiscale-Attention-ConvLSTM-Neural-Network-for-Multisource-Remote-Sensing-Data-Classification/" target="_self">
+              <i class="iconfont icon-chevronleft"></i>
+              <span>PREV</span>
+            </a>
+          
+        </div>
+        <div class="post-attach">
+          <span class="post-pubtime">2020-11-19</span>
+          <span class="post-tags">
+            
+              <i class="iconfont icon-tags"></i>
+              
+              <span class="span--tag">
+                <a href="/tags/cv/">
+                  #cv
+                </a>
+              </span>
+              
+            
+          </span>
+        </div>
+        <div class="post-foot-prev">
+          
+        </div>
+      </div>
+    
+  </div>
+  
+  <div class="post-catalog" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#A%E3%80%81FE-Net%EF%BC%9A%E4%BB%A5%E5%88%86%E5%B1%82%E5%BD%A2%E5%BC%8F%E6%8F%90%E5%8F%96%E7%89%B9%E5%BE%81"><span class="toc-text">A、FE-Net：以分层形式提取特征</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#B%E3%80%81F-Net%EF%BC%9A%E7%94%A8%E4%BA%8E%E8%9E%8D%E5%90%88FE-Net%E6%8F%90%E5%8F%96%E7%9A%84%E7%89%B9%E5%BE%81"><span class="toc-text">B、F-Net：用于融合FE-Net提取的特征</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#C%E3%80%81R-Net%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%8F%90%E9%AB%98%E4%BB%8EFE-Net%E6%8F%90%E5%8F%96%E7%9A%84%E7%89%B9%E5%BE%81%E7%9A%84%E8%9E%8D%E5%90%88%E6%B0%B4%E5%B9%B3"><span class="toc-text">C、R-Net：用于提高从FE-Net提取的特征的融合水平</span></a></li></ol>
+    </div>
+  </div>
+
+  <script src="/js/catalog.js"></script>
+
+
+
+  
+    <div class="comments-container">
+      
+
+
+
+
+
+    </div>
+  
+</div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" href="https://github.com/Sditch/sditch.github.io">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a href="https://github.com/Sditch/sditch.github.io">Copyright © Switch 2020</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+<script src="/js/backtotop.js"></script>
+
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>Fusion of Multispectral LiDAR, Hyperspectral, and RGB Data for Urban Land Cover Classification | Sditch</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.ico">
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/"><img src="/images/34339465.jpg" alt=""></a>
+    <div class="nickname"><a href="/">Sditch</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">归档</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+<script src="/js/activeNav.js"></script>
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+
+
+
+
+
+
+
+<!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+<div class="container post-details" id="post-details">
+  <div class="post-content">
+    <div class="post-title">Fusion of Multispectral LiDAR, Hyperspectral, and RGB Data for Urban Land Cover Classification</div>
+    <div class="post-attach">
+      <span class="post-pubtime">2020-11-24</span>
+      <span class="post-tags">
+        
+          <i class="iconfont icon-tags"></i>
+          
+          <span class="span--tag">
+            <a href="/tags/cv/">
+              #cv
+            </a>
+          </span>
+          
+        
+      </span>
+    </div>
+    <div class="markdown-body">
+      <blockquote>
+<p>地址：<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=9007361">https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=9007361</a></p>
+</blockquote>
+<p>论文还没研究透，有待深入，不太清楚具体怎样实现的</p>
+<p><strong>特点</strong>：在随机森林框架内提出了节点测试</p>
+<p><strong>注</strong>：<a target="_blank" rel="noopener" href="https://easyai.tech/ai-definition/random-forest/">随机森林</a>由很多决策树组成。当我们进行分类任务时，新的输入样本进入，就让森林中的每一棵决策树分别进行判断和分类，每个决策树会得到一个自己的分类结果，决策树的分类结果中哪一个分类最多，那么随机森林就会把这个结果当做最终的结果。</p>
+<h2 id="Contribution："><a href="#Contribution：" class="headerlink" title="Contribution："></a>Contribution：</h2><p>1、本文提出了一个基于随机森林（RF）的单个的分类器，该分类器可用于高光谱图像、RGB图像、基于LiDAR的图像数据，或这些图像的组合。此外，随机森林分类器可直接对图像数据进行特征提取，不需要经过预处理或特征提取。</p>
+<p>2、本文所提的分类器可用来分析哪种不同的数据源对最终分类结果的贡献最大。</p>
+<h2 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h2><p>DFC18(数据融合竞赛)提供在休斯顿大学获得的多模态光学遥感数据。该数据包括：</p>
+<ul>
+<li>多光谱LiDAR数据，其地面采样距离(GSD)为0.5米</li>
+<li>48个通道的高光谱图像，其GSD为1米</li>
+<li>高分辨率RGB图像，其GSD为5cm</li>
+</ul>
+<p>数据覆盖地理面积约4km²，约1.4km²用于训练</p>
+<h2 id="METHODOLOGY"><a href="#METHODOLOGY" class="headerlink" title="METHODOLOGY"></a>METHODOLOGY</h2><p>随机森林的训练过程基于样本数为N的训练集D={(xi, yi)}, i=1, …, N，x：以每个像素点为中心的大小为ω×ω的patch方块；y：标签</p>
+<p>高维样本的投影基于以下三个操作：</p>
+<ul>
+<li><p>数据源的选择</p>
+<p>随机选取数据源作为输入，每个数据源的像素值构成一个向量R ^ds^ ，s为哪种数据源，ds为数据源的深度(LiDAR为1，HSI为48)，节点测试函数中数据源的选择Φ是随机的</p>
+</li>
+<li><p>像素值的提取</p>
+<p>选取一个数据源之后，随机选择样本x对应的patch中的1个或2个或4个区域。对这些区域使用操作φ，φ：随机操作——使用中心像素值，或取区域平均值/(对该区域每个维度求和后的最大值/最小值/中位数）</p>
+</li>
+<li><p>所提取像素值间的距离计算</p>
+<p>最后一步完成高维样本x到单个标量x‘的映射。根据上一步每个patch中所提取的区域数的不同，有三种情况：</p>
+<ul>
+<li>区域数为1：x’ = d(φ1(Φ(x)), v)，v为一个随机参考值</li>
+<li>区域数为2：x’ = d(φ1(Φ(x)), φ2(Φ(x)))</li>
+<li>区域数为4：x’ = d(φ1(Φ(x)), φ2(Φ(x))) - d(φ3(Φ(x)), φ4(Φ(x)))，</li>
+</ul>
+<p>其中d的定义取决于数据源：</p>
+<ul>
+<li>LiDAR：d(a, b) = a-b 或者  d(a, b) = |a-b|</li>
+<li>RGB：a、b为三维数据，对不同颜色空间(颜色向量)使用欧氏距离</li>
+<li>HSI：使用光谱统计之间的差异，例如平均值，标准偏差，偏度，峰度和最小/最大/中值，或者矢量距离度量，例如欧几里得距离或逆相关等，然后每个样本点随机选择这些方法</li>
+</ul>
+</li>
+</ul>
+<p>每个内部节点n创建了种潜在的测试功能，划分局部数据Dn ∈ D为DnL左子节点和DnR右子节点。其划分通过以下公式评估：</p>
+<img src="https://i.loli.net/2020/11/24/kJRvHgVafrtj1YZ.png" alt="image-20201123231752966" style="zoom:40%;" />
+
+<h2 id="EXPERIMENTS"><a href="#EXPERIMENTS" class="headerlink" title="EXPERIMENTS"></a>EXPERIMENTS</h2><p>本实验基于30棵决策树(最大50棵)。</p>
+<p>第一个实验：通过在不同数据源（及其组合）上训练随机森林来评估分类性能。对于较小的数据集，随机森林的方差往往很高，随机森林趋于稳定需要大量决策树，因此本文重复了五次相应的实验并将结果平均。</p>
+<p><img src="https://i.loli.net/2020/11/24/TPIjnNBWxUC2Gh4.png" alt="image-20201124111901658.png"></p>
+<p><img src="https://i.loli.net/2020/11/24/kCTmB6SeoxptKsN.png" alt="image-20201124112322085.png"></p>
+<p><img src="https://i.loli.net/2020/11/24/ZW5EVvGt8lfaLYz.png" alt="image-20201124112717001" style="zoom:50%;" /><img src="https://i.loli.net/2020/11/24/YTMc2vIkSRxLQ1g.png" alt="image-20201124112747827" style="zoom:50%;" /></p>
+
+    </div>
+    
+      <div class="prev-or-next">
+        <div class="post-foot-next">
+          
+            <a href="/2020/11/19/Deep-Encoder%E2%80%93Decoder-Networks-for-Classification-of-Hyperspectral-and-LiDAR-Data/" target="_self">
+              <i class="iconfont icon-chevronleft"></i>
+              <span>PREV</span>
+            </a>
+          
+        </div>
+        <div class="post-attach">
+          <span class="post-pubtime">2020-11-24</span>
+          <span class="post-tags">
+            
+              <i class="iconfont icon-tags"></i>
+              
+              <span class="span--tag">
+                <a href="/tags/cv/">
+                  #cv
+                </a>
+              </span>
+              
+            
+          </span>
+        </div>
+        <div class="post-foot-prev">
+          
+        </div>
+      </div>
+    
+  </div>
+  
+  <div class="post-catalog" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Contribution%EF%BC%9A"><span class="toc-text">Contribution：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Data"><span class="toc-text">Data</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#METHODOLOGY"><span class="toc-text">METHODOLOGY</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EXPERIMENTS"><span class="toc-text">EXPERIMENTS</span></a></li></ol>
+    </div>
+  </div>
+
+  <script src="/js/catalog.js"></script>
+
+
+
+  
+    <div class="comments-container">
+      
+
+
+
+
+
+    </div>
+  
+</div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" href="https://github.com/Sditch/sditch.github.io">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a href="https://github.com/Sditch/sditch.github.io">Copyright © Switch 2020</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+<script src="/js/backtotop.js"></script>
+
+
+    </div>
+  </body>
+</html>

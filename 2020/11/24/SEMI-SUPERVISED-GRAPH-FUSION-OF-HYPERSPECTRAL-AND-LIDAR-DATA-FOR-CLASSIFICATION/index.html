@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>SEMI-SUPERVISED GRAPH FUSION OF HYPERSPECTRAL AND LIDAR DATA FOR CLASSIFICATION | Sditch</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.ico">
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/"><img src="/images/34339465.jpg" alt=""></a>
+    <div class="nickname"><a href="/">Sditch</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">归档</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+<script src="/js/activeNav.js"></script>
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+
+
+
+
+
+
+
+<!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+<div class="container post-details" id="post-details">
+  <div class="post-content">
+    <div class="post-title">SEMI-SUPERVISED GRAPH FUSION OF HYPERSPECTRAL AND LIDAR DATA FOR CLASSIFICATION</div>
+    <div class="post-attach">
+      <span class="post-pubtime">2020-11-24</span>
+      <span class="post-tags">
+        
+          <i class="iconfont icon-tags"></i>
+          
+          <span class="span--tag">
+            <a href="/tags/cv/">
+              #cv
+            </a>
+          </span>
+          
+        
+      </span>
+    </div>
+    <div class="markdown-body">
+      <blockquote>
+<p>论文地址：<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=7325695">https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=7325695</a></p>
+</blockquote>
+<p>贡献：提出了一个使用半监督的方式融合多个传感器数据的框架。该框架将光谱信息、空间信息和高度信息映射到低维空间来获得一个融合特征。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ul>
+<li><p>形态学特征：通过使用预定义尺寸的结构元素（SE）对图像进行morphological openings and closings来生成。例如，disk结构元素的形态学轮廓携带了物体最小尺寸的信息，而方位形态学特征表示物体的最大尺寸。与周围物体相比，opening部分作用在明亮区域(对LiDAR而言，表示高海拔区域，如屋顶)；closing部分作用在较暗区域(LiDAR指低海拔区域，如地面)。通过增加结构元素的尺寸并重复先前的操作，可建立完整的形态学轮廓(携带图像中对象的尺寸和形状信息)。</p>
+<p>本文，形态学特征通过应用形态学开和闭来生成；形态学开和闭由LiDAR数据和降维后的HSI部分重构。对于盘状结构元素，由LiDAR和HSI(PCA降维后)重构的形态学特征有15个。对于线性结构元素，形态学特征有20个(5到100的逐步增加，每步增加5).</p>
+</li>
+<li><p>半监督基于图的特征融合方法</p>
+<p>令X = {x1, x2, …, xN} = [X(spe); X(Spa); X(Ele)]。xi(Spe)——光谱特征；xi(Spa)——空间特征；xi(Ele)——高度特征。线性数据融合的目的可被概括为找出一个映射矩阵W，使得将高维数据X转换到低维特征空间Z：Z = W^T^ X。</p>
+<p>本文所提的半监督基于图的融合方法(SSGF)：通过考虑带标签和不带标签的样本来融合多个特征源。设带标签数据X(labeled) = {(x1, y1)，(x2, y2), …, (xn, yn)}，我们用线性判别分析(LDA)中的带标签数据去最大化类判别；设不带标签的样本X(unlabeled) = {(xn+1, yn+1)， …, (xN, yN)}在无监督的融合图(UGF)中去保留多传感数据的邻域信息。对于LDA，两种不同的特征值分解方法：</p>
+<img src="https://i.loli.net/2020/11/24/sxJiPG1n9WY2rUy.png" alt="image-20201124201350613" style="zoom:55%;" />
+
+<p>对于UGF：</p>
+<img src="https://i.loli.net/2020/11/24/HSspEjoPtalw8NA.png" alt="image-20201124201452389" style="zoom: 55%;" />
+
+<p>对应的SSGF：</p>
+<img src="https://i.loli.net/2020/11/24/J36lQnZw4Y9EN5V.png" alt="image-20201124201654180.png" style="zoom:45%;" />
+
+</li>
+</ul>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p><img src="https://i.loli.net/2020/11/24/cPpWZwvRTsJhuMk.png" alt="image-20201124202437695.png"></p>
+
+    </div>
+    
+      <div class="prev-or-next">
+        <div class="post-foot-next">
+          
+            <a href="/2020/11/24/Fusion-of-Multispectral-LiDAR-Hyperspectral-and-RGB-Data-for-Urban-Land-Cover-Classification/" target="_self">
+              <i class="iconfont icon-chevronleft"></i>
+              <span>PREV</span>
+            </a>
+          
+        </div>
+        <div class="post-attach">
+          <span class="post-pubtime">2020-11-24</span>
+          <span class="post-tags">
+            
+              <i class="iconfont icon-tags"></i>
+              
+              <span class="span--tag">
+                <a href="/tags/cv/">
+                  #cv
+                </a>
+              </span>
+              
+            
+          </span>
+        </div>
+        <div class="post-foot-prev">
+          
+        </div>
+      </div>
+    
+  </div>
+  
+  <div class="post-catalog" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-text">方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-text">实验</span></a></li></ol>
+    </div>
+  </div>
+
+  <script src="/js/catalog.js"></script>
+
+
+
+  
+    <div class="comments-container">
+      
+
+
+
+
+
+    </div>
+  
+</div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" href="https://github.com/Sditch/sditch.github.io">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a href="https://github.com/Sditch/sditch.github.io">Copyright © Switch 2020</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+<script src="/js/backtotop.js"></script>
+
+
+    </div>
+  </body>
+</html>

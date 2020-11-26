@@ -115,13 +115,13 @@
 <li>本文使用滑动滑窗从HSI和LiDAR数据中收集训练集(patch)进行训练</li>
 </ul>
 <h2 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><p><img src="https://i.loli.net/2020/11/26/9hOKwQFR2qXbxsE.png" alt="image-20201126130527177.png"></p>
-<h3 id="A-Feature-Extraction-by-PToP-CNN"><a href="#A-Feature-Extraction-by-PToP-CNN" class="headerlink" title="A. Feature Extraction by PToP CNN"></a>A. Feature Extraction by PToP CNN</h3><p>如上：设SourceⅠ表示HSI，Source Ⅱ表示LiDAR数据。特征提取阶段期望去寻找SourceⅠ到Source Ⅱ的关系。对于图像X的像素x的patch，其HSI图像与LiDAR图像之间存在关系(W, b为参数)**(疑惑：如果这样，那不是就将HSI近似转化为LiDAR图像了？)**：</p>
+<h3 id="A-Feature-Extraction-by-PToP-CNN"><a href="#A-Feature-Extraction-by-PToP-CNN" class="headerlink" title="A. Feature Extraction by PToP CNN"></a>A. Feature Extraction by PToP CNN</h3><p>如上：设SourceⅠ表示HSI，Source Ⅱ表示LiDAR数据。特征提取阶段期望去寻找SourceⅠ到Source Ⅱ的关系。对于图像X的像素x的patch，其HSI图像与LiDAR图像之间存在关系(W, b为参数) <strong>(疑惑：如果这样，那不是就将HSI近似转化为LiDAR图像了？)</strong> ：</p>
 <img src="https://i.loli.net/2020/11/26/L1NbpYqozxAcHm7.png" alt="image-20201126140323289" style="zoom:40%;" />
 
 <p>具体的特征提取部分(PToP CNN)如下：</p>
 <p><img src="https://i.loli.net/2020/11/26/CEb38iAkjXxqYyv.png" alt="image-20201126130606259.png"></p>
 <h3 id="B-Hierarchical-Fusion-Module"><a href="#B-Hierarchical-Fusion-Module" class="headerlink" title="B. Hierarchical Fusion Module"></a>B. Hierarchical Fusion Module</h3><p><img src="https://i.loli.net/2020/11/26/TiV8pYRdJPrUSNG.png" alt="image-20201126130736690.png"></p>
-<p>如图：右边部分是左边部分的一个分支。由于很难同时优化8个分支的参数，因此此处分别训练分层融合模块的每个分支。**(具体实现还有疑惑)**</p>
+<p>如图：右边部分是左边部分的一个分支。由于很难同时优化8个分支的参数，因此此处分别训练分层融合模块的每个分支。 <strong>(具体实现还有疑惑)</strong> </p>
 <h2 id="实验结果-部分"><a href="#实验结果-部分" class="headerlink" title="实验结果(部分)"></a>实验结果(部分)</h2><p><img src="https://i.loli.net/2020/11/26/wDJsXtmE61HV7fU.png" alt="image-20201126130812436.png"></p>
 
     </div>
@@ -151,6 +151,11 @@
           </span>
         </div>
         <div class="post-foot-prev">
+          
+            <a href="/2020/11/26/Multiple-Feature-Based-Superpixel-Level-Decision-Fusion-for-Hyperspectral-and-LiDAR-Data-Classification/" target="_self">
+              <span>NEXT</span>
+              <i class="iconfont icon-chevronright"></i>
+            </a>
           
         </div>
       </div>

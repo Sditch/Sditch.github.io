@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>Multiple Feature-Based Superpixel-Level Decision Fusion for Hyperspectral and LiDAR Data Classification | Sditch</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.ico">
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/"><img src="/images/34339465.jpg" alt=""></a>
+    <div class="nickname"><a href="/">Sditch</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">归档</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+<script src="/js/activeNav.js"></script>
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+
+
+
+
+
+
+
+<!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+<div class="container post-details" id="post-details">
+  <div class="post-content">
+    <div class="post-title">Multiple Feature-Based Superpixel-Level Decision Fusion for Hyperspectral and LiDAR Data Classification</div>
+    <div class="post-attach">
+      <span class="post-pubtime">2020-11-26</span>
+      <span class="post-tags">
+        
+          <i class="iconfont icon-tags"></i>
+          
+          <span class="span--tag">
+            <a href="/tags/cv/">
+              #cv
+            </a>
+          </span>
+          
+        
+      </span>
+    </div>
+    <div class="markdown-body">
+      <blockquote>
+<p>论文地址：<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9109714">https://ieeexplore.ieee.org/document/9109714</a></p>
+</blockquote>
+<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><p><img src="https://i.loli.net/2020/11/26/AUZy68MCgjnOFYt.png" alt="image-20201126161700989.png"></p>
+<p>1、对HSI利用KPCA降维</p>
+<p>注：KPCA = kernel Trick + PCA，即将原始数据映射到高维空间，再对高维空间进行PCA降维处理</p>
+<p>2、将降维后的HSI与具有不同尺度和不同方向的Gabor滤波器进行卷积；将LIDAR数据与Gabor进行卷积。对卷积后的结果，根据大小和相位将Gabor纹理进一步分为两部分。因此得到三个部分的拼接数据：HSI与LiDAR、HSI与LiDAR进行Gabor卷积后的大小，HSI与LiDAR进行Gabor卷积后的相位。使用RF对前两个部分进行分类。</p>
+<p>3、对于另一部分，SNIC(simple noniterative clustering，简单的非迭代聚类)和ERS(entropy rate superpixel segmentation，熵率<a target="_blank" rel="noopener" href="https://blog.csdn.net/electech6/article/details/45509779">超像素分割</a>)与第二步的三个分类图作用得到了6个正则化图(z1,…,z6)。</p>
+<p>4、为了充分利用各种图的互补性，六个正则化图和三个逐像素分类图经过加权融合得到最终的分类过程。</p>
+<h4 id="注1：QBC的编码准则如下，其中P-x-y-4BK-24-为Gabor的相位特征向量："><a href="#注1：QBC的编码准则如下，其中P-x-y-4BK-24-为Gabor的相位特征向量：" class="headerlink" title="注1：QBC的编码准则如下，其中P(x, y, 4BK + 24)为Gabor的相位特征向量："></a>注1：QBC的编码准则如下，其中P(x, y, 4B<del>K</del> + 24)为Gabor的相位特征向量：</h4><img src="https://i.loli.net/2020/11/26/2YDopw67FxMkeA8.png" alt="image-20201126200950776" style="zoom:25%;" />
+
+<p>QBC随后使用汉明距离D来评估非标签点u1和标签点u2之间的相似度，Q<del>u1/2</del> ∈R(4B<del>K</del> + 24)，XOR—异或操作：</p>
+<img src="https://i.loli.net/2020/11/26/DReV1C2Yi4kfWhO.png" alt="image-20201126201805756" style="zoom:17%;" />
+
+<h4 id="注2：关于超像素图分支。HSI与LiDAR数据拼接得到-J-H-L-∈-R-X-Y-B-1-。"><a href="#注2：关于超像素图分支。HSI与LiDAR数据拼接得到-J-H-L-∈-R-X-Y-B-1-。" class="headerlink" title="注2：关于超像素图分支。HSI与LiDAR数据拼接得到 J = [H, L] ∈ R(X, Y, B+1)。"></a>注2：关于超像素图分支。HSI与LiDAR数据拼接得到 J = [H, L] ∈ R(X, Y, B+1)。</h4><h4 id="注3-——-ERS："><a href="#注3-——-ERS：" class="headerlink" title="注3 —— ERS："></a>注3 —— ERS：</h4><p>将超像素分割问题转化为通过拓扑图呈现目标函数的优化问题。ERS首先将级联数据 J 转换为无向图G =（V，E），根据所给超像素数量T，优化由如下两个元素组成的目标函数得到分割图Se：</p>
+<p><img src="https://i.loli.net/2020/11/26/eIqJ5ZRlUfvDFoj.png" alt="image-20201126210551950.png"></p>
+<h4 id="注3-——-SNIC：（x为空间坐标）"><a href="#注3-——-SNIC：（x为空间坐标）" class="headerlink" title="注3 —— SNIC：（x为空间坐标）"></a>注3 —— SNIC：（x为空间坐标）</h4><img src="https://i.loli.net/2020/11/26/MfrEk4yTZBjvacW.png" alt="image-20201126211051998" style="zoom:25%;" />
+
+<h4 id="注4：第4步的加权融合——基于超像素的决策融合"><a href="#注4：第4步的加权融合——基于超像素的决策融合" class="headerlink" title="注4：第4步的加权融合——基于超像素的决策融合"></a>注4：第4步的加权融合——基于超像素的决策融合</h4><p>关于正则化方法，设C表示分类图 (C<del>R</del>, C<del>p</del>, C<del>M</del>) ，S为超像素图（S<del>N</del> ，S<del>E</del> )，故正则化图Z(存在重叠误差，对某些类别数量少且分布不集中时对分类结果产生负面影响) ：</p>
+<img src="https://i.loli.net/2020/11/26/edM2rHLv8ZfVX4N.png" alt="image-20201126211622327" style="zoom:11%;" />
+
+<p>其中：</p>
+<img src="https://i.loli.net/2020/11/26/waRkFH7KSEYo29L.png" style="zoom:12%;" />
+
+<p>最后使用投票策略得到最终图F：</p>
+<img src="https://i.loli.net/2020/11/26/2xHs3NKaX7ERryD.png" alt="image-20201126212404777" style="zoom:12%;" />
+
+<h2 id="实验-部分-："><a href="#实验-部分-：" class="headerlink" title="实验(部分)："></a>实验(部分)：</h2><p><img src="https://i.loli.net/2020/11/26/QJ7BwPVjM6CZDRu.png" alt="image-20201126212609326.png"></p>
+
+    </div>
+    
+      <div class="prev-or-next">
+        <div class="post-foot-next">
+          
+            <a href="/2020/11/26/Feature-Extraction-for-Classification-of-Hyperspectral-and-LiDAR-Data-Using-Patch-to-Patch-CNN/" target="_self">
+              <i class="iconfont icon-chevronleft"></i>
+              <span>PREV</span>
+            </a>
+          
+        </div>
+        <div class="post-attach">
+          <span class="post-pubtime">2020-11-26</span>
+          <span class="post-tags">
+            
+              <i class="iconfont icon-tags"></i>
+              
+              <span class="span--tag">
+                <a href="/tags/cv/">
+                  #cv
+                </a>
+              </span>
+              
+            
+          </span>
+        </div>
+        <div class="post-foot-prev">
+          
+        </div>
+      </div>
+    
+  </div>
+  
+  <div class="post-catalog" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B"><span class="toc-text">模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A81%EF%BC%9AQBC%E7%9A%84%E7%BC%96%E7%A0%81%E5%87%86%E5%88%99%E5%A6%82%E4%B8%8B%EF%BC%8C%E5%85%B6%E4%B8%ADP-x-y-4BK-24-%E4%B8%BAGabor%E7%9A%84%E7%9B%B8%E4%BD%8D%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F%EF%BC%9A"><span class="toc-text">注1：QBC的编码准则如下，其中P(x, y, 4BK + 24)为Gabor的相位特征向量：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A82%EF%BC%9A%E5%85%B3%E4%BA%8E%E8%B6%85%E5%83%8F%E7%B4%A0%E5%9B%BE%E5%88%86%E6%94%AF%E3%80%82HSI%E4%B8%8ELiDAR%E6%95%B0%E6%8D%AE%E6%8B%BC%E6%8E%A5%E5%BE%97%E5%88%B0-J-H-L-%E2%88%88-R-X-Y-B-1-%E3%80%82"><span class="toc-text">注2：关于超像素图分支。HSI与LiDAR数据拼接得到 J &#x3D; [H, L] ∈ R(X, Y, B+1)。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A83-%E2%80%94%E2%80%94-ERS%EF%BC%9A"><span class="toc-text">注3 —— ERS：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A83-%E2%80%94%E2%80%94-SNIC%EF%BC%9A%EF%BC%88x%E4%B8%BA%E7%A9%BA%E9%97%B4%E5%9D%90%E6%A0%87%EF%BC%89"><span class="toc-text">注3 —— SNIC：（x为空间坐标）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A84%EF%BC%9A%E7%AC%AC4%E6%AD%A5%E7%9A%84%E5%8A%A0%E6%9D%83%E8%9E%8D%E5%90%88%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E%E8%B6%85%E5%83%8F%E7%B4%A0%E7%9A%84%E5%86%B3%E7%AD%96%E8%9E%8D%E5%90%88"><span class="toc-text">注4：第4步的加权融合——基于超像素的决策融合</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C-%E9%83%A8%E5%88%86-%EF%BC%9A"><span class="toc-text">实验(部分)：</span></a></li></ol>
+    </div>
+  </div>
+
+  <script src="/js/catalog.js"></script>
+
+
+
+  
+    <div class="comments-container">
+      
+
+
+
+
+
+    </div>
+  
+</div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" href="https://github.com/Sditch/sditch.github.io">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a href="https://github.com/Sditch/sditch.github.io">Copyright © Switch 2020</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+<script src="/js/backtotop.js"></script>
+
+
+    </div>
+  </body>
+</html>
